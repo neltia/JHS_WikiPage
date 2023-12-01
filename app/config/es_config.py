@@ -24,11 +24,17 @@ def es_client():
     ca_file_path = os.getenv("ES_CRT_PATH")
 
     # connection create
-    connections.create_connection(
+    es = connections.create_connection(
         hosts=[f"https://{es_host}:{es_port}"],
         ca_certs=ca_file_path,
         api_key=es_api_key
     )
+
+    # 내부 엘라스틱서치 통신 불가 시 Raise
+    if not connections.get_connection().ping():
+        print("Failed to connect to Elasticsearch.")
+        print(es.info())
+        exit()
 
 
 # index mapping
