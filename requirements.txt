@@ -1,0 +1,7 @@
+python-dotenv==0.21.1
+Flask==2.2.2
+Werkzeug==2.2.2
+flask-restx==1.1.0
+elastic-transport==8.10.0
+elasticsearch==8.11.0
+elasticsearch-dsl==8.11.0
