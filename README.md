@@ -1,4 +1,4 @@
-# flask-api-todo
+# flask-api
 Board API 작성: Flask-RESTX 라이브러리 활용 REST API 작성 과제
 
 ## Sytem Arch (test)
