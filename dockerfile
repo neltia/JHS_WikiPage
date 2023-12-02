@@ -8,8 +8,7 @@ COPY . .
 
 # net-tools
 RUN apt-get update
-RUN apt-get install vim
-RUN apt-get install iputils-ping net-tools
+RUN apt-get install -y vim
 
 # python packages install
 RUN apt-get install python3 python3-pip python3-dev git libssl-dev libffi-dev build-essential -y
