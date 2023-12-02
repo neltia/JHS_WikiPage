@@ -40,7 +40,6 @@ STACK_VERSION=8.11.1
 
 # Set the cluster name
 CLUSTER_NAME=docker-cluster
-ES_CRT_PATH=http_ca.crt
 
 # Set to 'basic' or 'trial' to automatically start the 30-day trial
 LICENSE=basic

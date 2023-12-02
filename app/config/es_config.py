@@ -14,24 +14,21 @@ def es_init():
 
 # 엘라스틱서치 클라이언트 세션 생성
 def es_client():
-    # es host info
-    es_api_key = os.getenv("ES_API_KEY")
-    es_host = os.getenv("ES_HOST")
+    # ENV
+    es_username = os.getenv("ELASTIC_USERNAME", "elastic")
+    es_pw = os.getenv("ELASTIC_PASSWORD")
     es_port = os.getenv("ES_PORT")
-
-    # es ssl key (vagrant/virtualbox 8.10.4)
-    # cp /etc/elasticsearch/certs/http_ca.crt /vagrant
     ca_file_path = os.getenv("ES_CRT_PATH")
 
     # connection create
     es = connections.create_connection(
-        hosts=[f"https://{es_host}:{es_port}"],
+        hosts=[f"https://es01:{es_port}"],
         ca_certs=ca_file_path,
-        api_key=es_api_key
+        basic_auth=(es_username, es_pw)
     )
 
     # 내부 엘라스틱서치 통신 불가 시 Raise
-    if not connections.get_connection().ping():
+    if not es.ping():
         print("Failed to connect to Elasticsearch.")
         print(es.info())
         exit()

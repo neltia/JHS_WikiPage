@@ -4,5 +4,5 @@ __pycache__/
 # env
 .env
 
-# certs
-http_ca.crt
+# test
+test.py
