@@ -36,4 +36,5 @@ def es_client():
 
 # index mapping
 def index_mapping():
+    BoardIndex.init()
     return

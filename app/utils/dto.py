@@ -4,7 +4,7 @@ from flask_restx import Namespace, fields
 class BoardDto:
     api = Namespace('board', description='Board API')
 
-    board_model = api.model('Board', {
+    post_model = api.model('post', {
         'id': fields.String(
             readonly=True,
             description='The unique identifier'
