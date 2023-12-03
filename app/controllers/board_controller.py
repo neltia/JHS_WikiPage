@@ -8,12 +8,11 @@ post_model = BoardDto.post_model
 
 
 @api.route('/')
-@api.response(404, 'Todo not found')
+@api.response(404, 'Board post list not found')
 class PostList(Resource):
-    ''' Shows a list of all todos, and lets you POST to add new tasks '''
     @api.doc('list_posts')
     def get(self):
-        # List all post
+        '''Shows a list of all posts'''
         post_list = BoardService.all_post()
 
         # 검색 결과가 비어있는 경우 404 응답 반환
@@ -31,6 +30,7 @@ class PostCreateResource(Resource):
     @api.doc("create_post")
     @api.expect(post_model, validate=True)
     def post(self):
+        ''' create new post and return post id '''
         req = api.payload
         post_id = BoardService.create_post(
             title=req["title"], content=req["content"]
@@ -43,15 +43,16 @@ class PostCreateResource(Resource):
 @api.response(404, 'post not found')
 @api.param('post_id', 'The board post identifier')
 class PostResource(Resource):
-    '''Show a single post item and lets you delete them'''
     @api.doc("get_post")
     def get(self, post_id):
+        ''' Show a single post item '''
         post = BoardService.get_post(post_id)
         data = {"status_code": 200, "result": post}
         return data
 
     @api.doc("delete_post")
     def delete(self, post_id):
+        ''' Delete single post item '''
         req = BoardService.delete_post(post_id)
         data = {"status_code": 200, "result": req}
         return data
