@@ -1,7 +1,7 @@
 from dotenv import load_dotenv
 import os
 from elasticsearch_dsl import connections
-from app.models.dao import BoardIndex
+from app.models.dao import BoardIndex, RelatedPostIndex
 
 
 # es 설정 초기화
@@ -33,8 +33,11 @@ def es_client():
         print(es.info())
         exit()
 
+    return es
+
 
 # index mapping
 def index_mapping():
     BoardIndex.init()
+    RelatedPostIndex.init()
     return
