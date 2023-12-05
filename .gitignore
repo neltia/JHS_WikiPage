@@ -4,8 +4,8 @@ __pycache__/
 # env
 .env
 
-# test
-test.py
+# test files
+test*.py
 
 # dummpy data 생성을 위한 selenium 코드,
 # 특정 사이트의 게시판 내용을 가져와 인덱스에 삽입
