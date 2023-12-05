@@ -1,7 +1,7 @@
 import elasticsearch
 from app.config.es_config import es_client
 from elasticsearch_dsl import Search, Q
-from app.models.dao import BoardIndex, RelatedPostIndex
+from app.models.dao import BoardIndex, RelatedPostIndex, RelatedDocument
 from app.utils.dto import BoardDto
 
 es = es_client()
@@ -57,17 +57,24 @@ class RelatedService:
             # - 단어가 하나만 겹치는 문서가 검색되는 경우를 위한 분기
             related_words = hit.to_dict()["word_list"]
             related_words_cnt = len(related_words)
-            merge_list = word_list + related_words
+            merge_list = word_list + related_words.split()
             merge_cnt = word_list_cnt + related_words_cnt
-            if merge_cnt - list(set(merge_list)) == 1:
+            if merge_cnt - len(list(set(merge_list))) == 1:
                 continue
 
             # - 연관게시글 목록 추가
-            related_post = {"score": hit.meta.score, "post_id": hit.meta.id}
-            related_post_list.append(related_post)
+            related_document = RelatedDocument(score=hit.meta.score, post_id=hit.meta.id)
+            related_post_list.append(related_document)
+
+        # 연관게시글이 없을 경우: 필드 누락 방지를 위한 빈 도큐먼트 삽입
+        if len(related_post_list) == 0:
+            related_document = RelatedDocument(score=None, post_id=None)
+            related_post_list.append(related_document)
 
         # 인덱스 데이터 저장
-        obj = RelatedPostIndex(meta={'id': post_id}, word_list=word_string)
-        obj.related_posts = related_post_list
+        obj = RelatedPostIndex(
+            meta={'id': post_id}, word_list=word_string,
+            related_posts=related_post_list
+        )
         obj.save()
         return related_post_list

@@ -1,5 +1,6 @@
 from flask_restx import Resource
 from app.services.board_service import BoardService
+from app.services.related_service import RelatedService
 from app.utils.dto import BoardDto
 
 
@@ -35,6 +36,10 @@ class PostCreateResource(Resource):
         post_id = BoardService.create_post(
             title=req["title"], content=req["content"]
         )
+
+        low_freq_words = RelatedService.get_freq_words(post_id)
+        related_posts = RelatedService.related_posts(post_id, low_freq_words)
+
         data = {"status_code": 201, "result": post_id}
         return data, 201
 
