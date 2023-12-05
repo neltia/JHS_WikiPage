@@ -11,13 +11,9 @@ api = BoardDto.api
 class BoardService:
     @staticmethod
     def all_post():
-        search = Search(index="board_index")
+        search = Search(index="board_index").source(["title", "created_at"])
         res = search.query('match_all').execute()
-        post_list = []
-        for hit in res.hits:
-            post_data = hit.to_dict()
-            post_data['id'] = hit.meta.id
-            post_list.append(post_data)
+        post_list = [hit.to_dict() for hit in res.hits]
         return post_list
 
     @staticmethod
@@ -40,16 +36,3 @@ class BoardService:
         post = post.to_dict()
         post = common.conversed_json(post)
         return post
-
-    @staticmethod
-    def delete_post(post_id):
-        try:
-            post = BoardIndex.get(id=post_id)
-        except elasticsearch.NotFoundError:
-            msg = f"post_id: {post_id} doesn't exist"
-            res = {"status_code": 404, "result": msg}
-            api.abort(404, res)
-
-        post.delete()
-        res = "deleted"
-        return res

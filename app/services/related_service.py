@@ -96,4 +96,5 @@ class RelatedService:
 
         doc = res[0]
         related_posts = doc["_source"]["related_posts"]
+        related_posts = [item["post_id"] for item in related_posts if "post_id" in item]
         return related_posts
