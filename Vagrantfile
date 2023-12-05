@@ -5,6 +5,8 @@ Vagrant.configure("2") do |config|
   config.vm.box = "alvistack/ubuntu-22.04"
 
   # via 127.0.0.1 to disable public access
+  # - Nginx
+  config.vm.network "forwarded_port", guest: 80, host: 80, host_ip: "127.0.0.1"
   # - Docker
   config.vm.network "forwarded_port", guest: 2375, host: 2375, host_ip: "127.0.0.1"
   # - WAS
