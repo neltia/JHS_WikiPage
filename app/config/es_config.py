@@ -18,7 +18,9 @@ def es_client():
     es_username = os.getenv("ELASTIC_USERNAME", "elastic")
     es_pw = os.getenv("ELASTIC_PASSWORD")
     es_port = os.getenv("ES_PORT")
-    ca_file_path = os.getenv("ES_CRT_PATH")
+    ca_file_path = os.getenv("ES_CRT_PATH", "/usr/share/certs/ca/ca.crt")
+    # LOG:
+    # print(es_username, es_pw, es_port, ca_file_path)
 
     # connection create
     es = connections.create_connection(
