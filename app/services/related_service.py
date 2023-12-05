@@ -5,6 +5,7 @@ from app.models.dao import BoardIndex, RelatedPostIndex, RelatedDocument
 from app.utils.dto import BoardDto
 
 es = es_client()
+api = BoardDto.api
 
 
 class RelatedService:
@@ -20,13 +21,16 @@ class RelatedService:
         low_freq_words = [term  for term, info in term_freq_info.items() if info['term_freq'] / total_docs <= 0.4]
 
         # 결과 반환
-        # LOG: print("Low-frequency words (<= 40%):", low_freq_words)
+        # LOG:
+        # high_freq_words = [term for term, info in term_freq_info.items() if info['term_freq'] / total_docs > 0.4]
+        # print("High-frequency words (> 40%):", high_freq_words)
+        # print("Low-frequency words (<= 40%):", low_freq_words)
         return low_freq_words
 
 
     '''freq words 기준, 연관게시글 연결'''
     @staticmethod
-    def related_posts(post_id, word_list):
+    def connect_posts(post_id, word_list):
         # match 쿼리 수행을 위해 문자열 결합
         word_list_cnt = len(word_list)
         if isinstance(word_list, list):
@@ -35,7 +39,7 @@ class RelatedService:
         # Query: word_list 필드 검색, 겹친 단어가 많을수록 score 값이 높음
         # 요청 경우가 새 도큐먼트 생성 시이긴 하지만,
         # - 만약을 위해 주어진 post_id는 검색에서 제외
-        s = Search(index=RelatedPostIndex())
+        s = Search(index="related_posts")
         query = Q('bool',
             must=[
                 Q('match', word_list=word_string)
@@ -78,3 +82,18 @@ class RelatedService:
         )
         obj.save()
         return related_post_list
+
+    '''저장된 연관 게시글 조회'''
+    @staticmethod
+    def get_posts(post_id):
+        search = Search(index="related_posts").filter("term", _id=post_id)
+        response = search.execute()
+        res = response.to_dict()["hits"]["hits"]
+        if len(res) == 0:
+            msg = f"post_id: {post_id} doesn't exist"
+            res = {"status_code": 404, "result": msg}
+            api.abort(404, res)
+
+        doc = res[0]
+        related_posts = doc["_source"]["related_posts"]
+        return related_posts

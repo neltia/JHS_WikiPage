@@ -38,7 +38,7 @@ class PostCreateResource(Resource):
         )
 
         low_freq_words = RelatedService.get_freq_words(post_id)
-        related_posts = RelatedService.related_posts(post_id, low_freq_words)
+        related_posts = RelatedService.connect_posts(post_id, low_freq_words)
 
         data = {"status_code": 201, "result": post_id}
         return data, 201
@@ -51,13 +51,13 @@ class PostResource(Resource):
     @api.doc("get_post")
     def get(self, post_id):
         ''' Show a single post item '''
+        # 게시글 내용 조회
         post = BoardService.get_post(post_id)
-        data = {"status_code": 200, "result": post}
-        return data
 
-    @api.doc("delete_post")
-    def delete(self, post_id):
-        ''' Delete single post item '''
-        req = BoardService.delete_post(post_id)
-        data = {"status_code": 200, "result": req}
+        # 연관게시글 목록 조회, 기본 연관 score가 높은 순서로 반환
+        related_posts = RelatedService.get_posts(post_id)
+        post["related_posts"] = related_posts
+
+        # 데이터 반환
+        data = {"status_code": 200, "result": post}
         return data
