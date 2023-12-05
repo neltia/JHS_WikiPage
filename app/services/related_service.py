@@ -11,7 +11,7 @@ api = BoardDto.api
 class RelatedService:
     '''ES의 Term Vectors API 활용 빈도 정보 계산'''
     @staticmethod
-    def get_freq_words(post_id):
+    def get_freq_words(post_id: str) -> list:
         # Term Vectors에서 빈도 정보 추출
         term_vectors = es.termvectors(index="board_index", id=post_id, fields=['content'], term_statistics=True)
         term_freq_info = term_vectors['term_vectors']['content']['terms']
@@ -30,11 +30,10 @@ class RelatedService:
 
     '''freq words 기준, 연관게시글 연결'''
     @staticmethod
-    def connect_posts(post_id, word_list):
+    def connect_posts(post_id: str, word_list: list) -> list:
         # match 쿼리 수행을 위해 문자열 결합
         word_list_cnt = len(word_list)
-        if isinstance(word_list, list):
-            word_string = " ".join(word_list)
+        word_string = " ".join(word_list)
 
         # Query: word_list 필드 검색, 겹친 단어가 많을수록 score 값이 높음
         # 요청 경우가 새 도큐먼트 생성 시이긴 하지만,
@@ -85,7 +84,7 @@ class RelatedService:
 
     '''저장된 연관 게시글 조회'''
     @staticmethod
-    def get_posts(post_id):
+    def get_posts(post_id: str) -> list:
         search = Search(index="related_posts").filter("term", _id=post_id)
         response = search.execute()
         res = response.to_dict()["hits"]["hits"]
