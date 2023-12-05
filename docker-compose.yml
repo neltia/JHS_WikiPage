@@ -221,13 +221,19 @@ services:
     build:
       context: .
       dockerfile: dockerfile
+    command: gunicorn manage:app --bind 0.0.0.0:8080
     volumes:
       - certs:/usr/share/certs
     ports:
-      - "8000:8000"
+      - "8080:8080"
     expose:
-      - "8000"
-
+      - "8080"
+  nginx:
+    build: ./setup/nginx
+    ports:
+      - 80:80
+    depends_on:
+      - was
 
 volumes:
   certs:
