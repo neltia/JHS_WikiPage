@@ -58,12 +58,12 @@ class RelatedService:
         related_post_list = list()
         for hit in response:
             # - 스코어 값이 1 이상이더라도,
-            # - 단어가 하나만 겹치는 문서가 검색되는 경우를 위한 분기
-            related_words = hit.to_dict()["word_list"]
-            related_words_cnt = len(related_words)
-            merge_list = word_list + related_words.split()
-            merge_cnt = word_list_cnt + related_words_cnt
-            if merge_cnt - len(list(set(merge_list))) == 1:
+            # - 단어가 하나만 겹치는, 혹은 겹치지 않는 문서가 검색되는 경우를 위한 분기
+            related_words = hit.to_dict()["word_list"].split()
+            duplicated_words = list(set(word_list).intersection(related_words))
+            # LOG:
+            # print(duplicated_words)
+            if len(duplicated_words) <= 1:
                 continue
 
             # - 연관게시글 목록 추가

@@ -9,7 +9,7 @@ class BoardIndex(Document):
         name = "board_index"
 
     title = Text()
-    content = Text(analyzer="nori")
+    content = Text()
     created_at = Date()
 
 
