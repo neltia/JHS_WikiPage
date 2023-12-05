@@ -35,6 +35,7 @@ flask-restx==1.1.0
 elastic-transport==8.10.0
 elasticsearch==8.11.0
 elasticsearch-dsl==8.11.0
+gunicorn==21.2.0
 </pre>
 
 ## 프로젝트 실행
@@ -74,6 +75,15 @@ MEM_LIMIT=1073741824
 </pre>
 
 ### docker-compose
+- new service build
+<pre>
+docker-compose -d up --build
+</pre>
+- service down
+<pre>
+docker-compose down
+</pre>
+- service restart
 <pre>
 docker-compose -d up
 </pre>
