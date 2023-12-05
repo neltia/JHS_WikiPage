@@ -33,8 +33,10 @@ class PostCreateResource(Resource):
     def post(self):
         ''' create new post and return post id '''
         req = api.payload
+        title = req["title"].strip("\n")
+        content = req["content"].strip("\n")
         post_id = BoardService.create_post(
-            title=req["title"], content=req["content"]
+            title=title, content=content
         )
 
         low_freq_words = RelatedService.get_freq_words(post_id)
