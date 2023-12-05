@@ -52,7 +52,7 @@ class RelatedService:
         # 쿼리 수행
         # - size는 게시글의 최대 수를 임의로 산정
         # - min_score는 1로 설정, 테스트 결과 1 이하의 경우 단어가 하나만 겹치는 경우로 산정
-        s = s.query(query).extra(size=10, min_score=1)
+        s = s.query(query).extra(size=1000, min_score=1)
         response = s.execute()
         # 결과 데이터 반환
         related_post_list = list()

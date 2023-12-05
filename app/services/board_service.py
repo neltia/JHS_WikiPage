@@ -12,7 +12,7 @@ class BoardService:
     @staticmethod
     def all_post():
         search = Search(index="board_index").source(["title", "created_at"])
-        res = search.query('match_all').execute()
+        res = search.query('match_all').extra(size=1000).execute()
         post_list = [hit.to_dict() for hit in res.hits]
         return post_list
 
