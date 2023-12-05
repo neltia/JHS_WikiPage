@@ -11,7 +11,7 @@ api = BoardDto.api
 class BoardService:
     @staticmethod
     def all_post():
-        search = Search(index=BoardIndex())
+        search = Search(index="board_index")
         res = search.query('match_all').execute()
         post_list = []
         for hit in res.hits:
